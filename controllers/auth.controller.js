@@ -34,7 +34,7 @@
 }
 
 //Login
-const JWT_KEY= "jwtSecretKeyAAA33333@@@#####8889999jjdd"
+
 export const login = async (req,res)=>{
     try {
         const {register,password}=req.body;
@@ -46,7 +46,7 @@ export const login = async (req,res)=>{
         if(!isMatch){
            res.status(404).json({success: false, error : "wrong password"});
         }
-        const token = jwt.sign({ id:studentData._id }, JWT_KEY);
+        const token = jwt.sign({ id:studentData._id },process.env.JWT_KEY);
         res.status(200).json({token,success:true});
     } catch (error) { res.status(500).json({
        success: false, error : error.message});
@@ -58,7 +58,7 @@ export const leaveform = async (req,res)=>{
     const token = req.headers.authorization?.split(' ')[1];
   const { startDate, endDate, reason } = req.body;
   try {
-    const decoded = jwt.verify(token, JWT_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
     const studentData = await student.findOne({_id:decoded.id});
 
     const today = new Date().setHours(0, 0, 0, 0);
@@ -108,7 +108,7 @@ export const leaveform = async (req,res)=>{
 export const leaveCancel=async(req,res)=>{
   const token = req.headers.authorization?.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, JWT_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
     const leaveId = req.body.id;
     if (!leaveId) {
       return res.status(400).json({ message: 'Leave ID required' });
@@ -140,7 +140,7 @@ export const leaveCancel=async(req,res)=>{
 export const studentinfo=async(req,res)=>{
     const token = req.headers.authorization?.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, JWT_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
     const studentData = await student.findOne({_id:decoded.id});
     res.json(studentData);
   } catch (error) {
@@ -154,7 +154,7 @@ export const studentinfo=async(req,res)=>{
 export const leaveHistory=async(req,res)=>{
   const token = req.headers.authorization?.split(' ')[1];
 try {
-  const decoded = jwt.verify(token, JWT_KEY);
+  const decoded = jwt.verify(token, process.env.JWT_KEY);
   const leaveData = await leave.find({studentId:decoded.id})
   res.json(leaveData);
 } catch (error) {
@@ -168,7 +168,7 @@ export const studentinfoUpdate = async (req,res)=>{
   const token = req.headers.authorization?.split(' ')[1];
 const { username, register,standard,section } = req.body;
 try {
-  const decoded = jwt.verify(token, JWT_KEY);
+  const decoded = jwt.verify(token, process.env.JWT_KEY);
   const studentData = await student.findByIdAndUpdate({_id:decoded.id},{ username, register,standard,section },{ new: true });
   res.json(studentData);
 } catch (err) {
