@@ -6,7 +6,7 @@
  
  
  //Signup
- export const signup = async(req,res)=>{
+ export const signupUser = async(req,res)=>{
    try {
     const {username,standard,section,register,gender,password}=req.body;
     const existingRegister = await student.findOne({register})
@@ -35,7 +35,7 @@
 
 //Login
 
-export const login = async (req,res)=>{
+export const loginUser = async (req,res)=>{
     try {
         const {register,password}=req.body;
         const studentData= await student.findOne({register});
@@ -54,7 +54,7 @@ export const login = async (req,res)=>{
 }
 
 //Leave Apply
-export const leaveform = async (req,res)=>{
+export const leaveformUser = async (req,res)=>{
     const token = req.headers.authorization?.split(' ')[1];
   const { startDate, endDate, reason } = req.body;
   try {
@@ -105,7 +105,7 @@ export const leaveform = async (req,res)=>{
 };
 
 // Cancel upcoming leave
-export const leaveCancel=async(req,res)=>{
+export const leaveCancelUser=async(req,res)=>{
   const token = req.headers.authorization?.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_KEY);
@@ -137,7 +137,7 @@ export const leaveCancel=async(req,res)=>{
 
 
 // studentinfo 
-export const studentinfo=async(req,res)=>{
+export const studentinfoUser=async(req,res)=>{
     const token = req.headers.authorization?.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_KEY);
@@ -151,7 +151,7 @@ export const studentinfo=async(req,res)=>{
 
 //leaveHistory
 
-export const leaveHistory=async(req,res)=>{
+export const leaveHistoryUser=async(req,res)=>{
   const token = req.headers.authorization?.split(' ')[1];
 try {
   const decoded = jwt.verify(token, process.env.JWT_KEY);
@@ -164,7 +164,7 @@ try {
 
 
 //user information update
-export const studentinfoUpdate = async (req,res)=>{
+export const studentinfoUpdateUser = async (req,res)=>{
   const token = req.headers.authorization?.split(' ')[1];
 const { username, register,standard,section } = req.body;
 try {

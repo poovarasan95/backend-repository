@@ -1,21 +1,21 @@
 import express from "express"
-import {signup,login,leaveform} from "../controllers/auth.controller.js";
-import{studentinfo,leaveHistory,leaveCancel,studentinfoUpdate} from "../controllers/auth.controller.js"
+import {signupUser,loginUser,leaveformUser} from "../controllers/auth.controller.js";
+import{studentinfoUser,leaveHistoryUser,leaveCancelUser,studentinfoUpdateUser} from "../controllers/auth.controller.js"
 
 const router = express.Router();
 
-router.post("/signup",signup)
+router.post("/signup",signupUser)
 
-router.post("/login",login)
+router.post("/login",loginUser)
 
-router.post("/leaveform",leaveform)
+router.post("/leaveform",leaveformUser)
 
-router.get("/studentinfo",studentinfo)
+router.get("/studentinfo",studentinfoUser)
 
-router.get("/leaveHistory",leaveHistory)
+router.get("/leaveHistory",leaveHistoryUser)
 
-router.delete("/leaveCancel",leaveCancel)
+router.delete("/leaveCancel",leaveCancelUser)
 
-router.put("/studentinfoUpdate",studentinfoUpdate)
+router.put("/studentinfoUpdate",studentinfoUpdateUser)
 
 export default router;
