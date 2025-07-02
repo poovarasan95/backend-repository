@@ -9,6 +9,7 @@ const studentSchema = mongoose.Schema({
     gender : {type:String,required:true},
     password : {type:String,required:true},
     leaveBalance: { type: Number, default: 10 },
+    role: { type: String, enum: ['student', 'admin'], default: 'student' },
     createAt : {type:Date,default:Date.now},
     updateAt : {type:Date,default:Date.now}
 })

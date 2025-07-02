@@ -2,6 +2,7 @@
  import leave from "../models/leave.js"
  import bcrypt from "bcryptjs"
  import jwt from "jsonwebtoken"
+ import Admin from "../models/admin.js";
  
  
  
@@ -33,25 +34,59 @@
    }
 }
 
-//Login
 
-export const loginUser = async (req,res)=>{
-    try {
-        const {register,password}=req.body;
-        const studentData= await student.findOne({register});
-        if(!studentData){
-          res.status(404).json({success: false, error : "User Not Found"});
-       }
-       const isMatch= await bcrypt.compare(password,studentData.password);
-        if(!isMatch){
-           res.status(404).json({success: false, error : "wrong password"});
+//Login page
+export const loginUser = async (req, res) => {
+  const { identifier, password } = req.body || {};
+
+  try {
+    // Try Admin login
+    const adminUser = await Admin.findOne({ email: identifier });
+    if (adminUser) {
+      const isMatch = await bcrypt.compare(password, adminUser.password);
+      if (!isMatch) {
+        return res.status(400).json({ success: false, error: "Wrong password" });
+      }
+
+      const token = jwt.sign({ id: adminUser._id, role: 'admin' }, process.env.JWT_KEY);
+      return res.status(200).json({
+        token,
+        role: 'admin',
+        admin: {
+          id: adminUser._id,
+          name: adminUser.name,
+          email: adminUser.email
         }
-        const token = jwt.sign({ id:studentData._id },process.env.JWT_KEY);
-        res.status(200).json({token,success:true});
-    } catch (error) { res.status(500).json({
-       success: false, error : error.message});
+      });
     }
-}
+
+    // Try Student login
+    const studentData = await student.findOne({ register: identifier });
+    if (studentData) {
+      const isMatch = await bcrypt.compare(password, studentData.password);
+      if (!isMatch) {
+        return res.status(400).json({ success: false, error: "Wrong password" });
+      }
+
+      const token = jwt.sign({ id: studentData._id, role: 'student' }, process.env.JWT_KEY);
+      return res.status(200).json({
+        token,
+        role: 'student',
+        student: {
+          id: studentData._id,
+          name: studentData.username,
+          register: studentData.register
+        }
+      });
+    }
+    return res.status(404).json({ success: false, error: "User not found" });
+
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+
 
 //Leave Apply
 export const leaveformUser = async (req,res)=>{
